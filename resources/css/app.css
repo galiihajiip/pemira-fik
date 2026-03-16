@@ -4,84 +4,186 @@
 
 @layer base {
     :root {
-        --background: 0 0% 100%;
-        --foreground: 20 14.3% 4.1%;
+        /* ── Ocean Dark Blue Theme ── */
+        --background: 228 91% 12%;
+        --foreground: 210 60% 95%;
 
-        --card: 0 0% 100%;
-        --card-foreground: 20 14.3% 4.1%;
+        --card: 228 80% 15%;
+        --card-foreground: 210 60% 95%;
 
-        --popover: 0 0% 100%;
-        --popover-foreground: 20 14.3% 4.1%;
+        --popover: 228 85% 13%;
+        --popover-foreground: 210 60% 95%;
 
         --primary: 24.6 95% 53.1%;
         --primary-foreground: 60 9.1% 97.8%;
 
-        --secondary: 60 4.8% 95.9%;
-        --secondary-foreground: 24 9.8% 10%;
+        --secondary: 228 65% 22%;
+        --secondary-foreground: 210 50% 90%;
 
-        --muted: 60 4.8% 95.9%;
-        --muted-foreground: 25 5.3% 44.7%;
+        --muted: 228 65% 20%;
+        --muted-foreground: 200 45% 65%;
 
-        --accent: 60 4.8% 95.9%;
-        --accent-foreground: 24 9.8% 10%;
+        --accent: 228 65% 22%;
+        --accent-foreground: 210 50% 90%;
 
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 60 9.1% 97.8%;
 
-        --border: 20 5.9% 90%;
-        --input: 20 5.9% 90%;
+        --border: 228 50% 25%;
+        --input: 228 55% 22%;
         --ring: 24.6 95% 53.1%;
-        --radius: 0.5rem;
+        --radius: 0.75rem;
 
+        /* ── Sidebar (shadcn sidebar vars) ── */
+        --sidebar-background: 228 92% 9%;
+        --sidebar-foreground: 210 50% 88%;
+        --sidebar-primary: 24.6 95% 53.1%;
+        --sidebar-primary-foreground: 60 9.1% 97.8%;
+        --sidebar-accent: 228 65% 18%;
+        --sidebar-accent-foreground: 210 50% 90%;
+        --sidebar-border: 228 50% 20%;
+        --sidebar-ring: 24.6 95% 53.1%;
+
+        /* ── Chart / Vis ── */
         --vis-tooltip-background-color: none !important;
         --vis-tooltip-border-color: none !important;
         --vis-tooltip-text-color: none !important;
         --vis-tooltip-shadow-color: none !important;
         --vis-tooltip-backdrop-filter: none !important;
         --vis-tooltip-padding: none !important;
-
         --vis-primary-color: var(--primary);
-        /* change to any hsl value you want */
         --vis-secondary-color: 160 81% 40%;
         --vis-text-color: var(--muted-foreground);
     }
+}
 
-    .dark {
-        --background: 20 14.3% 4.1%;
-        --foreground: 60 9.1% 97.8%;
+.app-shell {
+    position: relative;
+    min-height: 100vh;
+}
 
-        --card: 20 14.3% 4.1%;
-        --card-foreground: 60 9.1% 97.8%;
-
-        --popover: 20 14.3% 4.1%;
-        --popover-foreground: 60 9.1% 97.8%;
-
-        --primary: 20.5 90.2% 48.2%;
-        --primary-foreground: 60 9.1% 97.8%;
-
-        --secondary: 12 6.5% 15.1%;
-        --secondary-foreground: 60 9.1% 97.8%;
-
-        --muted: 12 6.5% 15.1%;
-        --muted-foreground: 24 5.4% 63.9%;
-
-        --accent: 12 6.5% 15.1%;
-        --accent-foreground: 60 9.1% 97.8%;
-
-        --destructive: 0 72.2% 50.6%;
-        --destructive-foreground: 60 9.1% 97.8%;
-
-        --border: 12 6.5% 15.1%;
-        --input: 12 6.5% 15.1%;
-        --ring: 20.5 90.2% 48.2%;
-    }
+.app-content {
+    position: relative;
+    z-index: 2;
 }
 
 @layer base {
     * {
         @apply border-border;
     }
+
+    html {
+        color-scheme: dark;
+    }
+
     body {
         @apply bg-background text-foreground;
+        background: linear-gradient(
+            160deg,
+            #03103b 0%,
+            #04195a 50%,
+            #062a7a 100%
+        );
+        background-attachment: fixed;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    body > * {
+        position: relative;
+        z-index: 2;
+    }
+
+    body::before,
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* Layer 1: diffuse ocean lights and 3D orb shapes */
+    body::before {
+        z-index: 0;
+        background-image:
+            radial-gradient(circle at 12% 18%, rgba(110, 211, 255, 0.22) 0, rgba(110, 211, 255, 0) 33%),
+            radial-gradient(circle at 84% 12%, rgba(56, 189, 248, 0.25) 0, rgba(56, 189, 248, 0) 28%),
+            radial-gradient(circle at 90% 78%, rgba(249, 115, 22, 0.22) 0, rgba(249, 115, 22, 0) 24%),
+            radial-gradient(circle at 22% 82%, rgba(148, 233, 255, 0.2) 0, rgba(148, 233, 255, 0) 22%);
+        filter: blur(0.5px) saturate(120%);
+        animation: oceanGlowShift 18s ease-in-out infinite alternate;
+    }
+
+    /* Layer 2: subtle wave lines + caustic highlights */
+    body::after {
+        z-index: 1;
+        opacity: 0.45;
+        background-image:
+            repeating-radial-gradient(
+                circle at 10% 120%,
+                rgba(180, 243, 255, 0.08) 0 8px,
+                rgba(180, 243, 255, 0) 8px 32px
+            ),
+            linear-gradient(
+                110deg,
+                rgba(186, 230, 253, 0) 0%,
+                rgba(186, 230, 253, 0.09) 40%,
+                rgba(186, 230, 253, 0) 75%
+            );
+        mix-blend-mode: screen;
+        animation: causticDrift 20s linear infinite;
+    }
+
+    /* Scrollbar ocean style */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: hsl(228, 91%, 9%);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: hsl(228, 50%, 30%);
+        border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: hsl(24.6, 95%, 53.1%);
+    }
+}
+
+/* ── Bubble float animation (shared across pages) ── */
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-140px) scale(0.6);
+        opacity: 0;
+    }
+}
+
+@keyframes oceanGlowShift {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+        transform: translate3d(0, -12px, 0) scale(1.02);
+    }
+}
+
+@keyframes causticDrift {
+    0% {
+        transform: translate3d(-2%, 0, 0);
+    }
+    100% {
+        transform: translate3d(2%, -1.5%, 0);
     }
 }

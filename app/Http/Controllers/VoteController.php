@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\BallotDetail;
 use App\Models\Group;
 use App\Models\Organization;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -17,17 +16,63 @@ class VoteController extends Controller
         $user->load("verification");
 
         $organizations = Organization::query()
-            ->where(function (Builder $query) use ($user) {
-                $query->where("major", null)
-                    ->orWhere("major", $user->major);
-            })
             ->where("is_open", true)
-            ->get();
+            ->get()
+            ->sortBy(fn(Organization $organization) => $this->organizationRank($organization->name))
+            ->values();
 
         return Inertia::render("vote/index", [
             "verification" => $user->verification,
             "organizations" => $organizations,
         ]);
+    }
+
+    private function organizationRank(string $name): int
+    {
+        $normalized = strtolower(trim(preg_replace('/\s+/', ' ', $name)));
+
+        if (
+            str_contains($normalized, 'blm informatika') ||
+            ($normalized === 'informatika')
+        ) {
+            return 1;
+        }
+
+        if (
+            str_contains($normalized, 'blm sistem informasi') ||
+            str_contains($normalized, 'sistem informasi') ||
+            str_contains($normalized, 'blm si')
+        ) {
+            return 2;
+        }
+
+        if (
+            str_contains($normalized, 'blm sains data') ||
+            str_contains($normalized, 'sains data') ||
+            str_contains($normalized, 'blm sd')
+        ) {
+            return 3;
+        }
+
+        if (
+            str_contains($normalized, 'blm bisnis digital') ||
+            str_contains($normalized, 'blm bisinis digital') ||
+            str_contains($normalized, 'bisnis digital') ||
+            str_contains($normalized, 'bisinis digital') ||
+            str_contains($normalized, 'blm bisdig') ||
+            str_contains($normalized, 'bisdig')
+        ) {
+            return 4;
+        }
+
+        if (
+            str_contains($normalized, 'bem fasilkom') ||
+            (str_contains($normalized, 'bem') && str_contains($normalized, 'fasilkom'))
+        ) {
+            return 5;
+        }
+
+        return 999;
     }
 
     public function organization(Request $request, Organization $organization)
@@ -100,11 +145,21 @@ class VoteController extends Controller
         Organization $organization,
         Group $group
     ) {
-        $request->validate([
-            'candidate_ids' => 'required|exists:candidates,id',
-        ]);
+        $group->loadCount("candidates");
 
-        if (count($request->candidate_ids) < $group->min_candidates && $group->candidates_count >= $group->min_candidates) {
+        if ($group->candidates_count > 0) {
+            $request->validate([
+                "candidate_ids" => "required|array",
+                "candidate_ids.*" => "exists:candidates,id",
+            ]);
+        }
+
+        $candidateIds = $request->input("candidate_ids", []);
+        if (!is_array($candidateIds)) {
+            $candidateIds = [$candidateIds];
+        }
+
+        if (count($candidateIds) < $group->min_candidates && $group->candidates_count >= $group->min_candidates) {
             return redirect()
                 ->back()
                 ->withErrors([
@@ -122,7 +177,7 @@ class VoteController extends Controller
             ->where("group_id", $group->id)
             ->delete();
 
-        foreach ($request->candidate_ids as $candidateId) {
+        foreach ($candidateIds as $candidateId) {
             $ballot->details()->create([
                 "organization_id" => $organization->id,
                 "group_id" => $group->id,

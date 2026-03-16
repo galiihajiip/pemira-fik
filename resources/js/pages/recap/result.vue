@@ -92,7 +92,17 @@ const ballotsChart = [
                                 class="relative"
                             >
                                 <div
-                                    class="absolute top-4 right-4 size-12 bg-white border rounded-full text-lg font-bold shadow text-black flex items-center justify-center"
+                                    class="absolute top-4 right-4 size-12 rounded-full text-lg font-bold shadow flex items-center justify-center"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #f97316,
+                                            #eab308
+                                        );
+                                        color: white;
+                                        box-shadow: 0 4px 12px
+                                            rgba(249, 115, 22, 0.5);
+                                    "
                                 >
                                     {{ candidate.votes }}
                                 </div>

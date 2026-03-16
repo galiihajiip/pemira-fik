@@ -73,19 +73,15 @@ const menu = {
                             size="lg"
                             class="data-[state=open]:bg-accent data-[state=open]:text-accent-foreground border"
                         >
-                            <div
-                                class="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
-                            >
-                                <Flame class="size-4" />
-                            </div>
+                            <img src="/logo.svg" class="size-8 object-contain" alt="Logo PEMIRA" />
                             <div
                                 class="grid flex-1 text-left text-sm leading-tight"
                             >
-                                <span class="truncate font-extrabold">
-                                    PEMIRA
+                                <span class="truncate font-extrabold text-primary">
+                                    PEMIRA FIK
                                 </span>
-                                <span class="truncate text-xs">
-                                    Fakultas Ilmu Komputer
+                                <span class="truncate text-xs text-muted-foreground">
+                                    Admin Dashboard
                                 </span>
                             </div>
                         </SidebarMenuButton>
@@ -235,7 +231,7 @@ const menu = {
         </Sidebar>
         <SidebarInset>
             <header
-                class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
+                class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b border-border/50"
             >
                 <div id="header" class="flex items-center gap-2 px-4">
                     <SidebarTrigger class="-ml-1" />

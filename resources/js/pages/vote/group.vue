@@ -8,7 +8,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Link, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps<{
     organization: Organization;
@@ -22,8 +22,36 @@ const form = useForm({
 });
 
 const selected = ref(
-    props.ballotDetails?.map((detail) => detail.candidate_id) ?? []
+    props.ballotDetails?.map((detail) => detail.candidate_id) ?? [],
 );
+
+const isBemFasilkom = computed(() => {
+    const groupName = props.group.name.toLowerCase();
+    return (
+        (groupName.includes("ketua") &&
+            groupName.includes("wakil") &&
+            groupName.includes("bem")) ||
+        groupName.includes("bem fasilkom")
+    );
+});
+
+const isBlmSainsData = computed(() =>
+    props.group.name.toLowerCase().includes("blm sains data"),
+);
+
+const displayCandidates = computed(() => {
+    const items: Array<Candidate | null> = [...props.candidates];
+
+    if (isBlmSainsData.value && items.length === 0) {
+        items.push(null);
+    }
+
+    if (isBemFasilkom.value && items.length < 2) {
+        items.push(null);
+    }
+
+    return items;
+});
 
 const select = (id: number) => {
     if (selected.value.includes(id)) {
@@ -45,7 +73,7 @@ const submit = () => {
     ) {
         form.setError(
             "candidate_ids",
-            `Pilihlah minimal ${props.group.min_candidates} kandidat!`
+            `Pilihlah minimal ${props.group.min_candidates} kandidat!`,
         );
         return;
     }
@@ -58,7 +86,7 @@ const submit = () => {
         }),
         {
             preserveState: false,
-        }
+        },
     );
 };
 </script>
@@ -98,18 +126,26 @@ const submit = () => {
                 <CardContent>
                     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <Card
-                            v-for="(candidate, number) in candidates"
-                            :class="{
-                                outline: selected.includes(candidate.id),
-                            }"
-                            class="aspect-square cursor-pointer overflow-hidden"
-                            @click="select(candidate.id)"
+                            v-for="(candidate, number) in displayCandidates"
+                            :key="candidate?.id ?? `empty-${number}`"
+                            class="aspect-square overflow-hidden"
+                            :class="[
+                                {
+                                    outline:
+                                        candidate &&
+                                        selected.includes(candidate.id),
+                                },
+                                candidate
+                                    ? 'cursor-pointer'
+                                    : 'empty-candidate-card border-cyan-200/30',
+                            ]"
+                            @click="candidate ? select(candidate.id) : null"
                         >
-                            <div class="size-full grid grid-cols-2 divide-x">
+                            <div v-if="candidate" class="size-full grid grid-cols-2 divide-x">
                                 <div>
                                     <div class="relative">
                                         <div
-                                            class="absolute bottom-4 left-4 size-8 flex items-center justify-center shadow bg-white border rounded-full text-lg font-bold"
+                                            class="absolute bottom-4 left-4 size-8 flex items-center justify-center shadow bg-primary text-primary-foreground border-0 rounded-full text-lg font-bold"
                                         >
                                             {{ number + 1 }}
                                         </div>
@@ -154,6 +190,30 @@ const submit = () => {
                                     </CardContent>
                                 </div>
                             </div>
+                            <div
+                                v-else
+                                class="empty-candidate-content size-full p-6 flex flex-col items-center justify-center text-center gap-3"
+                            >
+                                <div class="empty-candidate-bubble empty-candidate-bubble--a" />
+                                <div class="empty-candidate-bubble empty-candidate-bubble--b" />
+                                <div
+                                    class="size-12 flex items-center justify-center rounded-full text-lg font-bold bg-primary/20 text-primary border border-primary/40 shadow-lg"
+                                >
+                                    {{ number + 1 }}
+                                </div>
+                                <CardTitle class="text-base tracking-wide text-cyan-50">
+                                    Kotak Kosong
+                                </CardTitle>
+                                <CardDescription
+                                    class="text-xs text-cyan-100/75 max-w-[18ch]"
+                                >
+                                    {{
+                                        isBlmSainsData
+                                            ? "Belum ada kandidat di kelompok ini."
+                                            : "Slot kandidat kedua belum terisi."
+                                    }}
+                                </CardDescription>
+                            </div>
                         </Card>
                     </div>
                 </CardContent>
@@ -161,3 +221,96 @@ const submit = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.empty-candidate-card {
+    position: relative;
+    border-style: solid;
+    background:
+        linear-gradient(145deg, rgba(186, 230, 253, 0.14), rgba(8, 47, 73, 0.28)),
+        radial-gradient(circle at 15% 20%, rgba(125, 211, 252, 0.24), transparent 45%),
+        rgba(14, 116, 144, 0.1);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        inset 0 -14px 26px rgba(8, 47, 73, 0.28),
+        0 18px 38px rgba(2, 6, 23, 0.5),
+        0 0 24px rgba(56, 189, 248, 0.18);
+    backdrop-filter: blur(7px);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.empty-candidate-card::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 0.7rem;
+    border: 1px solid rgba(186, 230, 253, 0.35);
+    pointer-events: none;
+}
+
+.empty-candidate-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 40%;
+    border-radius: 0 0 999px 999px;
+    background: linear-gradient(
+        to bottom,
+        rgba(224, 242, 254, 0.28),
+        rgba(224, 242, 254, 0)
+    );
+    pointer-events: none;
+}
+
+.empty-candidate-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -16px 28px rgba(8, 47, 73, 0.3),
+        0 22px 44px rgba(2, 6, 23, 0.55),
+        0 0 28px rgba(103, 232, 249, 0.24);
+}
+
+.empty-candidate-content {
+    position: relative;
+    z-index: 1;
+}
+
+.empty-candidate-bubble {
+    position: absolute;
+    border-radius: 999px;
+    border: 1px solid rgba(186, 230, 253, 0.5);
+    background: rgba(186, 230, 253, 0.1);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    animation: driftBubble 4.8s ease-in-out infinite;
+}
+
+.empty-candidate-bubble--a {
+    width: 28px;
+    height: 28px;
+    top: 12%;
+    left: 12%;
+}
+
+.empty-candidate-bubble--b {
+    width: 18px;
+    height: 18px;
+    right: 13%;
+    bottom: 16%;
+    animation-delay: 0.9s;
+}
+
+@keyframes driftBubble {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.55;
+    }
+    50% {
+        transform: translateY(-7px);
+        opacity: 0.9;
+    }
+}
+</style>

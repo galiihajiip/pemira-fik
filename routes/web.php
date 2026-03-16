@@ -21,12 +21,42 @@ use App\Http\Middleware\EnsureUserIsVerified;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::get("/", fn() => Inertia::render("landing"))->name("landing");
+
 Route::middleware("guest")->group(function () {
     Route::get("/login", fn() => Inertia::render("login"))->name("login");
     Route::get("/auth/redirect", [AuthController::class, "redirect"])
         ->name("auth.redirect");
     Route::get("/auth/callback", [AuthController::class, "callback"])
         ->name("auth.callback");
+    Route::get("/auth/google/callback", [AuthController::class, "callback"])
+        ->name("auth.google.callback");
+
+    // DEV ONLY: bypass Google OAuth, hanya aktif di local
+    if (config("app.env") === "local") {
+        Route::get("/dev-login/{npm}", function ($npm) {
+            $user = \App\Models\User::where("npm", $npm)->first();
+
+            if (!$user) {
+                // Auto-create kalau NPM ada di whitelist
+                $whitelist = \App\Models\Whitelist::find($npm);
+                if (!$whitelist) {
+                    abort(404, "NPM {$npm} tidak ditemukan di users maupun whitelist.");
+                }
+                $user = \App\Models\User::create([
+                    "npm"   => $npm,
+                    "email" => $npm . "@student.upnjatim.ac.id",
+                    "name"  => "Dev User ({$npm})",
+                    "year"  => substr($npm, 0, 2),
+                    "major" => substr($npm, 4, 2),
+                    "type"  => "voter",
+                ]);
+            }
+
+            \Illuminate\Support\Facades\Auth::login($user);
+            return redirect(route("index"));
+        })->name("dev.login");
+    }
 });
 
 Route::middleware("auth")->group(function () {

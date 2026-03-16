@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
@@ -38,31 +37,25 @@ class Group extends Model
 
     public function next($year, $major)
     {
-        return $this->organization->groups()
-            ->where("ordering", ">", $this->ordering)
-            ->where(function (Builder $query) use ($year) {
-                $query->where("year", null)
-                    ->orWhere("year", $year);
-            })
-            ->where(function (Builder $query) use ($major) {
-                $query->where("major", null)
-                    ->orWhere("major", $major);
-            })
-            ->first();
+        $groups = $this->organization->votingGroupsOrdered();
+        $currentIndex = $groups->search(fn(Group $group) => $group->id === $this->id);
+
+        if ($currentIndex === false) {
+            return null;
+        }
+
+        return $groups->get($currentIndex + 1);
     }
 
     public function prev($year, $major)
     {
-        return $this->organization->groups()
-            ->where("ordering", "<", $this->ordering)
-            ->where(function (Builder $query) use ($year) {
-                $query->where("year", null)
-                    ->orWhere("year", $year);
-            })
-            ->where(function (Builder $query) use ($major) {
-                $query->where("major", null)
-                    ->orWhere("major", $major);
-            })
-            ->first();
+        $groups = $this->organization->votingGroupsOrdered();
+        $currentIndex = $groups->search(fn(Group $group) => $group->id === $this->id);
+
+        if ($currentIndex === false || $currentIndex === 0) {
+            return null;
+        }
+
+        return $groups->get($currentIndex - 1);
     }
 }

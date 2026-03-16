@@ -1,5 +1,7 @@
 import "../css/app.css";
 import "./bootstrap";
+import BackgroundMusic from "./components/BackgroundMusic.vue";
+import OceanDecor from "./components/OceanDecor.vue";
 
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
@@ -13,15 +15,22 @@ createInertiaApp({
     resolve: (name) =>
         resolvePageComponent(
             `./pages/${name}.vue`,
-            import.meta.glob<DefineComponent>("./pages/**/*.vue")
+            import.meta.glob<DefineComponent>("./pages/**/*.vue"),
         ),
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        createApp({
+            render: () =>
+                h("div", { class: "app-shell" }, [
+                    h(OceanDecor),
+                    h(BackgroundMusic),
+                    h("div", { class: "app-content" }, [h(App, props)]),
+                ]),
+        })
             .use(plugin)
             .use(ZiggyVue)
             .mount(el);
     },
     progress: {
-        color: "#4B5563",
+        color: "#f97316",
     },
 });

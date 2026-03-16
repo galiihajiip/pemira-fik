@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="petalGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c"/>
+      <stop offset="50%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#eab308"/>
+    </linearGradient>
+    <linearGradient id="topFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="rightFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#c2410c"/>
+    </linearGradient>
+    <linearGradient id="leftFace" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="outlineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#eab308"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- ── LOTUS PETALS (fan from base of box ~y=148) ── -->
+
+  <!-- Far left petal -->
+  <ellipse cx="100" cy="168" rx="13" ry="24"
+    fill="url(#petalGrad)" stroke="#eab308" stroke-width="1.5"
+    transform="rotate(-58 100 148)" filter="url(#glow)"/>
+
+  <!-- Mid-left petal -->
+  <ellipse cx="100" cy="168" rx="13" ry="24"
+    fill="url(#petalGrad)" stroke="#eab308" stroke-width="1.5"
+    transform="rotate(-29 100 148)" filter="url(#glow)"/>
+
+  <!-- Center petal -->
+  <ellipse cx="100" cy="168" rx="13" ry="24"
+    fill="url(#petalGrad)" stroke="#eab308" stroke-width="1.5"
+    transform="rotate(0 100 148)" filter="url(#glow)"/>
+
+  <!-- Mid-right petal -->
+  <ellipse cx="100" cy="168" rx="13" ry="24"
+    fill="url(#petalGrad)" stroke="#eab308" stroke-width="1.5"
+    transform="rotate(29 100 148)" filter="url(#glow)"/>
+
+  <!-- Far right petal -->
+  <ellipse cx="100" cy="168" rx="13" ry="24"
+    fill="url(#petalGrad)" stroke="#eab308" stroke-width="1.5"
+    transform="rotate(58 100 148)" filter="url(#glow)"/>
+
+  <!-- ── BALLOT BOX – isometric cube ── -->
+
+  <!-- Left face -->
+  <polygon points="45,82 100,110 100,158 45,130"
+    fill="url(#leftFace)" stroke="url(#outlineGrad)" stroke-width="2.5"
+    stroke-linejoin="round"/>
+
+  <!-- Right face -->
+  <polygon points="155,82 155,130 100,158 100,110"
+    fill="url(#rightFace)" stroke="url(#outlineGrad)" stroke-width="2.5"
+    stroke-linejoin="round"/>
+
+  <!-- Top face -->
+  <polygon points="100,54 155,82 100,110 45,82"
+    fill="url(#topFace)" stroke="url(#outlineGrad)" stroke-width="2.5"
+    stroke-linejoin="round"/>
+
+  <!-- Inner box detail on top face -->
+  <polygon points="100,66 142,87 100,108 58,87"
+    fill="none" stroke="url(#outlineGrad)" stroke-width="1.2"
+    stroke-linejoin="round" opacity="0.55"/>
+
+  <!-- Inner box detail on left face -->
+  <polygon points="55,88 100,115 100,150 55,123"
+    fill="none" stroke="url(#outlineGrad)" stroke-width="1" opacity="0.3"/>
+
+  <!-- Inner box detail on right face -->
+  <polygon points="145,88 145,123 100,150 100,115"
+    fill="none" stroke="url(#outlineGrad)" stroke-width="1" opacity="0.3"/>
+
+  <!-- Slot opening on top face -->
+  <rect x="88" y="77" width="24" height="5" rx="2.5"
+    fill="#c2410c" stroke="#7c2d12" stroke-width="0.8"/>
+
+  <!-- ── BALLOT PAPER ── -->
+  <!-- Paper body -->
+  <rect x="88" y="16" width="22" height="38" rx="2.5"
+    fill="white" stroke="url(#outlineGrad)" stroke-width="2"/>
+
+  <!-- Folded corner top-right -->
+  <path d="M 104,16 L 110,16 L 110,22 Z"
+    fill="#fbbf24" stroke="url(#outlineGrad)" stroke-width="1.2"
+    stroke-linejoin="round"/>
+  <!-- Fold crease -->
+  <path d="M 104,16 L 104,22 L 110,22"
+    fill="none" stroke="url(#outlineGrad)" stroke-width="1"/>
+
+  <!-- Lines on paper -->
+  <line x1="93" y1="26" x2="107" y2="26"
+    stroke="#f97316" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="93" y1="32" x2="107" y2="32"
+    stroke="#f97316" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="93" y1="38" x2="107" y2="38"
+    stroke="#f97316" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="93" y1="44" x2="104" y2="44"
+    stroke="#f97316" stroke-width="1.5" stroke-linecap="round"/>
+
+</svg>

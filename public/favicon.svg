@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#eab308"/>
+    </linearGradient>
+    <linearGradient id="topFace" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="rightFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="leftFace" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+
+  <!-- LOTUS PETALS (rotated ellipses around pivot 50,76) -->
+  <ellipse cx="50" cy="84" rx="7" ry="13" fill="url(#g1)" stroke="#eab308" stroke-width="1" transform="rotate(-55,50,76)"/>
+  <ellipse cx="50" cy="84" rx="7" ry="13" fill="url(#g1)" stroke="#eab308" stroke-width="1" transform="rotate(-28,50,76)"/>
+  <ellipse cx="50" cy="84" rx="7" ry="13" fill="url(#g1)" stroke="#eab308" stroke-width="1" transform="rotate(0,50,76)"/>
+  <ellipse cx="50" cy="84" rx="7" ry="13" fill="url(#g1)" stroke="#eab308" stroke-width="1" transform="rotate(28,50,76)"/>
+  <ellipse cx="50" cy="84" rx="7" ry="13" fill="url(#g1)" stroke="#eab308" stroke-width="1" transform="rotate(55,50,76)"/>
+
+  <!-- BALLOT BOX -->
+  <!-- Top face -->
+  <polygon points="50,26 76,40 50,54 24,40" fill="url(#topFace)" stroke="url(#g1)" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Right face -->
+  <polygon points="76,40 76,70 50,84 50,54" fill="url(#rightFace)" stroke="url(#g1)" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Left face -->
+  <polygon points="24,40 50,54 50,84 24,70" fill="url(#leftFace)" stroke="url(#g1)" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Inner box outline on top -->
+  <polygon points="50,33 68,43 50,53 32,43" fill="none" stroke="url(#g1)" stroke-width="1" opacity="0.5"/>
+
+  <!-- Slot -->
+  <path d="M 43,39 L 57,39" stroke="#c2410c" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- BALLOT PAPER -->
+  <rect x="43" y="8" width="14" height="22" rx="2" fill="white" stroke="url(#g1)" stroke-width="1.5"/>
+  <!-- Fold corner -->
+  <path d="M 53,8 L 57,12 L 53,12 Z" fill="#fbbf24"/>
+  <!-- Lines on paper -->
+  <line x1="46" y1="15" x2="54" y2="15" stroke="#f97316" stroke-width="1" stroke-linecap="round"/>
+  <line x1="46" y1="19" x2="54" y2="19" stroke="#f97316" stroke-width="1" stroke-linecap="round"/>
+  <line x1="46" y1="23" x2="54" y2="23" stroke="#f97316" stroke-width="1" stroke-linecap="round"/>
+</svg>
